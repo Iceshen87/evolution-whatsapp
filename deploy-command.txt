@@ -1,0 +1,14 @@
+# 在服务器上执行以下命令完成部署
+
+# 1. 连接服务器
+ssh root@8.222.213.209
+
+# 2. 下载部署脚本
+curl -fsSL https://raw.githubusercontent.com/Iceshen87/evolution-whatsapp/main/deploy.sh -o deploy.sh
+
+# 3. 赋予执行权限并运行
+chmod +x deploy.sh
+./deploy.sh
+
+# 或者一步执行：
+# curl -fsSL https://raw.githubusercontent.com/Iceshen87/evolution-whatsapp/main/deploy.sh | bash
