@@ -1,0 +1,9 @@
+复制以下命令，粘贴到服务器终端执行：
+
+curl -fsSL https://raw.githubusercontent.com/Iceshen87/evolution-whatsapp/main/deploy-new-server.sh | bash
+
+========================================
+
+如果上面命令执行失败，使用以下备用命令：
+
+git clone https://github.com/Iceshen87/evolution-whatsapp.git /opt/evolution-whatsapp && cd /opt/evolution-whatsapp && chmod +x deploy-new-server.sh && ./deploy-new-server.sh
