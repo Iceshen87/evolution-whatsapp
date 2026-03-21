@@ -18,15 +18,6 @@ export default function Users() {
 
   useEffect(() => { fetchUsers(); }, []);
 
-  const handleToggleActive = async (id: number, isActive: boolean) => {
-    try {
-      await api.put(`/users/${id}`, { isActive: !isActive });
-      fetchUsers();
-    } catch {
-      alert('Failed to update user');
-    }
-  };
-
   const handleDelete = async (id: number, username: string) => {
     if (!confirm(`Deactivate user "${username}"? Their WhatsApp instance will be removed.`)) return;
     try {
