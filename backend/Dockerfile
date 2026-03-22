@@ -17,4 +17,4 @@ COPY --from=builder /app/prisma ./prisma
 RUN mkdir -p /app/data
 ENV DATABASE_URL="file:/app/data/app.db"
 EXPOSE 3000
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]
+CMD ["node", "dist/index.js"]
