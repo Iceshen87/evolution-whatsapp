@@ -1,0 +1,24 @@
+[
+  {
+    "id": "mlxuh3bcszj6",
+    "clanName": "test",
+    "clanTag": "",
+    "leaderName": "test",
+    "contactType": "email",
+    "contactValue": "test@test.com",
+    "preferredDate": "",
+    "preferredTime": "",
+    "teamSize": "5v5",
+    "thLevel": "th18",
+    "difficulty": "normal",
+    "matchDuration": "45min",
+    "customDuration": "",
+    "officialSchedule": true,
+    "bannedTroops": "",
+    "notes": "",
+    "rules": [],
+    "server": "international",
+    "createdAt": "2026-02-22T14:30:08.904Z",
+    "status": "cancelled"
+  }
+]

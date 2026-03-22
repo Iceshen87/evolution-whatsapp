@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 95%;
+    --card: 222 47% 10%;
+    --card-foreground: 210 40% 95%;
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 95%;
+    --primary: 45 100% 51%;
+    --primary-foreground: 222 47% 6%;
+    --secondary: 270 70% 60%;
+    --secondary-foreground: 210 40% 95%;
+    --muted: 215 20% 18%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 270 70% 60%;
+    --accent-foreground: 210 40% 95%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 95%;
+    --border: 215 20% 20%;
+    --input: 215 20% 20%;
+    --ring: 45 100% 51%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(222 47% 8%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(215 20% 25%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(215 20% 35%);
+}
+
+/* Game-style glow effects */
+.glow-gold {
+  box-shadow: 0 0 15px rgba(255, 196, 0, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 15px rgba(147, 91, 247, 0.3);
+}
+
+.text-win {
+  color: hsl(142 76% 55%);
+}
+
+.text-lose {
+  color: hsl(0 84% 60%);
+}
+
+.text-draw {
+  color: hsl(45 100% 51%);
+}
