@@ -1,4 +1,8 @@
 node_modules/
-.env
 dist/
-build/
+.env
+*.db
+*.db-journal
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
