@@ -1,0 +1,47 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int         @id @default(autoincrement())
+  username     String      @unique
+  passwordHash String
+  role         String      @default("user") // "admin" | "user"
+  isActive     Boolean     @default(true)
+  instanceName String?     @unique
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  posMapping   PosMapping?
+}
+
+model PosMapping {
+  id          Int    @id @default(autoincrement())
+  appkey      String @unique
+  authkey     String @unique
+  instanceId  String @unique  // for ccs.365ws.com style: instance_id param
+  accessToken String @unique  // for ccs.365ws.com style: access_token param
+  userId      Int    @unique
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MessageLog {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  username    String
+  instanceName String
+  to          String   // recipient phone number
+  message     String   // message content (truncated if too long)
+  messageId   String?  // WhatsApp message ID
+  status      String   // 'sent', 'failed', 'pending'
+  error       String?  // error message if failed
+  createdAt   DateTime @default(now())
+  
+  @@index([userId])
+  @@index([createdAt])
+  @@index([username])
+}
