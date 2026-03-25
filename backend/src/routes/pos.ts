@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { prisma } from '../index';
 import { evolutionService } from '../services/evolution';
+import { authenticate, AuthRequest } from '../middleware/auth';
 
 export const posRouter = Router();
 
@@ -135,14 +136,22 @@ async function handleSend(req: Request, res: Response) {
 }
 
 // ─────────────────────────────────────────────────
-// Get message logs (admin only)
+// Get message logs (users see their own, admin sees all)
 // GET /api/pos/logs?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD&userId=XXX
 // ─────────────────────────────────────────────────
-posRouter.get('/logs', async (req: Request, res: Response) => {
+posRouter.get('/logs', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const { startDate, endDate, userId, username, limit = '100' } = req.query;
+    const currentUser = req.user!;
     
     const where: any = {};
+    
+    // Non-admin users can only see their own logs
+    if (currentUser.role !== 'admin') {
+      where.userId = currentUser.userId;
+    } else if (userId) {
+      where.userId = parseInt(String(userId), 10);
+    }
     
     if (startDate || endDate) {
       where.createdAt = {};
@@ -150,7 +159,6 @@ posRouter.get('/logs', async (req: Request, res: Response) => {
       if (endDate) where.createdAt.lte = new Date(String(endDate) + 'T23:59:59');
     }
     
-    if (userId) where.userId = parseInt(String(userId), 10);
     if (username) where.username = String(username);
     
     const logs = await prisma.messageLog.findMany({
@@ -180,11 +188,18 @@ posRouter.get('/logs', async (req: Request, res: Response) => {
 // Get message statistics per user
 // GET /api/pos/stats?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
 // ─────────────────────────────────────────────────
-posRouter.get('/stats', async (req: Request, res: Response) => {
+posRouter.get('/stats', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const { startDate, endDate } = req.query;
+    const currentUser = req.user!;
     
     const where: any = {};
+    
+    // Non-admin users can only see their own stats
+    if (currentUser.role !== 'admin') {
+      where.userId = currentUser.userId;
+    }
+    
     if (startDate || endDate) {
       where.createdAt = {};
       if (startDate) where.createdAt.gte = new Date(String(startDate));
