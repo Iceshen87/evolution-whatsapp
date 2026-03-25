@@ -29,10 +29,16 @@ export default function MessageLogs() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
     try {
+      // Check user role first
+      const meRes = await api.get('/auth/me');
+      const userRole = meRes.data.user?.role;
+      setIsAdmin(userRole === 'admin');
+
       // Fetch stats
       const statsRes = await api.get('/pos/stats');
       setStats(statsRes.data.data || []);
@@ -41,12 +47,16 @@ export default function MessageLogs() {
       const params: any = { limit: 100 };
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
-      if (selectedUser) params.userId = selectedUser;
+      if (selectedUser && userRole === 'admin') params.userId = selectedUser;
 
       const logsRes = await api.get('/pos/logs', { params });
       setLogs(logsRes.data.data?.logs || []);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to fetch logs:', err);
+      if (err.response?.status === 401) {
+        // Redirect to login if unauthorized
+        window.location.href = '/login';
+      }
     } finally {
       setLoading(false);
     }
@@ -56,7 +66,12 @@ export default function MessageLogs() {
     fetchData();
   }, []);
 
-  const handleFilter = () => {
+  const handleFilter = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    fetchData();
+  };
+
+  const handleRefresh = () => {
     fetchData();
   };
 
@@ -73,10 +88,11 @@ export default function MessageLogs() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Message Logs</h1>
         <button
-          onClick={fetchData}
-          className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm"
+          onClick={handleRefresh}
+          disabled={loading}
+          className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm disabled:opacity-50"
         >
-          Refresh
+          {loading ? 'Loading...' : 'Refresh'}
         </button>
       </div>
 
@@ -140,7 +156,7 @@ export default function MessageLogs() {
 
       {/* Filters */}
       <div className="bg-white p-4 rounded-lg border border-gray-200">
-        <div className="flex flex-wrap gap-4 items-end">
+        <form onSubmit={handleFilter} className="flex flex-wrap gap-4 items-end">
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">Start Date</label>
             <input
@@ -159,26 +175,29 @@ export default function MessageLogs() {
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">User</label>
-            <select
-              value={selectedUser}
-              onChange={(e) => setSelectedUser(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            >
-              <option value="">All Users</option>
-              {stats.map((s) => (
-                <option key={s.userId} value={s.userId}>{s.username}</option>
-              ))}
-            </select>
-          </div>
+          {isAdmin && (
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">User</label>
+              <select
+                value={selectedUser}
+                onChange={(e) => setSelectedUser(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                <option value="">All Users</option>
+                {stats.map((s) => (
+                  <option key={s.userId} value={s.userId}>{s.username}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <button
-            onClick={handleFilter}
-            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm"
+            type="submit"
+            disabled={loading}
+            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm disabled:opacity-50"
           >
-            Apply Filters
+            {loading ? 'Loading...' : 'Apply Filters'}
           </button>
-        </div>
+        </form>
       </div>
 
       {/* Logs Table */}
