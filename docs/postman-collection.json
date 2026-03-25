@@ -1,0 +1,125 @@
+{
+  "info": {
+    "_postman_id": "evolution-whatsapp-api",
+    "name": "Evolution WhatsApp API",
+    "description": "API collection for Evolution WhatsApp Integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POS Integration",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pos/send?number={{phone_number}}&type=text&message={{message}}&instance_id={{instance_id}}&access_token={{access_token}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pos", "send"],
+              "query": [
+                {"key": "number", "value": "{{phone_number}}"},
+                {"key": "type", "value": "text"},
+                {"key": "message", "value": "{{message}}"},
+                {"key": "instance_id", "value": "{{instance_id}}"},
+                {"key": "access_token", "value": "{{access_token}}"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pos/status?instance_id={{instance_id}}&access_token={{access_token}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pos", "status"],
+              "query": [
+                {"key": "instance_id", "value": "{{instance_id}}"},
+                {"key": "access_token", "value": "{{access_token}}"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin API",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{admin_username}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/web/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "web", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{jwt_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"merchant001\",\n  \"password\": \"securepassword123\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/web/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "web", "users"]
+            }
+          }
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/web/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "web", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get Message Logs",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{jwt_token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/pos/logs?limit=100",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pos", "logs"],
+              "query": [{"key": "limit", "value": "100"}]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {"key": "base_url", "value": "http://QR.365whatsapp.com"},
+    {"key": "instance_id", "value": "YOUR_INSTANCE_ID"},
+    {"key": "access_token", "value": "YOUR_ACCESS_TOKEN"},
+    {"key": "phone_number", "value": "60125600315"},
+    {"key": "message", "value": "Hello from POS"},
+    {"key": "admin_username", "value": "admin"},
+    {"key": "admin_password", "value": ""},
+    {"key": "jwt_token", "value": ""}
+  ]
+}
